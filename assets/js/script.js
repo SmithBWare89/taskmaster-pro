@@ -45,7 +45,51 @@ var saveTasks = function() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
+$(".list-group").on("click", "p", function() {
+  // Convert p tag into javascript object
+  var text = $(this)
+    .text()
+    .trim();
+  // creating dynamic elements
+  var textInput = $("<textarea>")
+    .addClass("form-control")
+    .val(text);
+    // Replaces the p from Add Task with textarea element
+  $(this).replaceWith(textInput);
+  // Adds blue blur around input textarea
+  textInput.trigger("focus");
+  // // Selects all of the innerHTML text
+  textInput.trigger("select");
+});
 
+$(".list-group").on("blur", "textarea", function(){
+  // get the textarea's current value/text when it's clicked on
+  var text = $(this)
+    .val()
+    .trim();
+
+  // get the parent ul's id attribute
+  var status = $(this)
+    .closest(".list-group")
+    .attr("id")
+    .replace("list-", "");
+
+  var index = $(this)
+    .closest(".list-group-item")
+    .index();
+
+  tasks[status][index].text = text;
+
+  // Converts textarea back into a p element
+  var taskP = $("<p>")
+    .addClass("m-1")
+    .text(text);
+
+  // replace textArea with recreated p element
+  $(this).replaceWith(taskP);
+  
+  saveTasks();
+})
 
 
 // modal was triggered
